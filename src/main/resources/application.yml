@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: ecommerce
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce
+    username: root
+    password: softeni0926
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+#    default-enum-type-handler: com.example.domain.model.enums.GenericEnumTypeHandler
+
+
+#設定値
+settings:
+  product-list:
+    size: 2  # 商品一覧の表示件数
+
