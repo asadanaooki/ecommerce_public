@@ -1,9 +1,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.ecommerce.mapper.ProductMapper">
+<mapper namespace="com.example.mapper.ProductMapper">
   <select id="searchProducts" resultType="com.example.dto.ProductCardDto">
     SELECT product_id, product_name, price, stock,
     CASE
-      WHEN stock <= 0 THEN TRUE
+      WHEN stock &lt;= 0 THEN TRUE
       ELSE FALSE
     END AS out_of_stock
     FROM product

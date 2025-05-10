@@ -1,5 +1,7 @@
 package com.example.enums;
 
-public class SortType {
-// TODO
+public enum SortType {
+    NEW,
+    HIGH,
+    LOW
 }

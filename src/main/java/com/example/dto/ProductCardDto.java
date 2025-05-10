@@ -10,7 +10,5 @@ public class ProductCardDto {
     
     private int price;
     
-    private boolean outOfStock; // stock == 0 で true
-    
-    private String thumbnailUrl;
+    private boolean outOfStock;
 }
