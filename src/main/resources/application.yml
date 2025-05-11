@@ -18,6 +18,7 @@ mybatis:
 
 #設定値
 settings:
-  product-list:
+  product:
     size: 2  # 商品一覧の表示件数
+    page-nav-radius: 2 # 現在ページの前後に表示するページリンク数 (±)
 

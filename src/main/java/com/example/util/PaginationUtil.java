@@ -2,6 +2,8 @@ package com.example.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * ページネーション計算用ユーティリティクラス
@@ -34,5 +36,11 @@ public class PaginationUtil {
         BigDecimal display = BigDecimal.valueOf(displayNumber);
 
         return total.divide(display, 0, RoundingMode.CEILING).intValue();
+    }
+    
+    public static List<Integer> createPageNumbers(int currentPage, int totalPage, int radius){
+        int from = Math.max(1, currentPage - radius);
+        int to = Math.min(totalPage, currentPage + radius);
+        return IntStream.rangeClosed(from, to).boxed().toList();
     }
 }
