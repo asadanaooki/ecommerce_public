@@ -35,9 +35,12 @@ public class ProductController {
             Model model) {
         SearchParam param = adjustSearchParam(page, sort, q);
 
-        ProductListDto dto = productService.searchProducts(param.pageNum, param.sort, param.keywords);
+        ProductListDto dto = productService.searchProducts(param.page, param.sort, param.keywords);
         model.addAttribute("dto", dto);
-
+        model.addAttribute("currentPage", param.page);
+        model.addAttribute("sort", param.sort);
+        model.addAttribute("keywords", q);
+        
         return "productList";
     }
 
@@ -68,6 +71,6 @@ public class ProductController {
         return new SearchParam(pageNum, sortType, keywords);
     }
 
-    record SearchParam(int pageNum, SortType sort, List<String> keywords) {
+    record SearchParam(int page, SortType sort, List<String> keywords) {
     }
 }

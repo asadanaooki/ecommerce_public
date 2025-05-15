@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.example.dto.ProductCardDto;
 import com.example.enums.SortType;
+import com.example.mapper.ProductMapper.SearchCondition;
 import com.example.util.PaginationUtil;
 
 @MybatisTest
@@ -35,6 +36,41 @@ class ProductMapperTest {
     @Nested
     class searchProducts {
         @Nested
+        class userId{
+            @Test
+            void searchProducts_guest() {
+                List<ProductCardDto> products = productMapper.searchProducts(
+                        new SearchCondition(
+                                null,
+                                Collections.emptyList(),
+                                SortType.NEW,
+                                SIZE,
+                                PaginationUtil.calculateOffset(1, SIZE)));
+
+                assertThat(products.size()).isEqualTo(2);
+                assertThat(products.get(0).getProductId()).isEqualTo("1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68");
+                assertThat(products.get(0).isFav()).isFalse();
+                assertThat(products.get(1).getProductId()).isEqualTo("f9c9cfb2-0893-4f1c-b508-f9e909ba5274");
+            }
+            
+            @Test
+            void searchProducts_login() {
+                List<ProductCardDto> products = productMapper.searchProducts(
+                        new SearchCondition(
+                                "550e8400-e29b-41d4-a716-446655440000",
+                                Collections.emptyList(),
+                                SortType.NEW,
+                                SIZE,
+                                PaginationUtil.calculateOffset(1, SIZE)));
+
+                assertThat(products.size()).isEqualTo(2);
+                assertThat(products.get(0).getProductId()).isEqualTo("1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68");
+                assertThat(products.get(0).isFav()).isTrue();
+                assertThat(products.get(1).getProductId()).isEqualTo("f9c9cfb2-0893-4f1c-b508-f9e909ba5274");
+            }
+        }
+        
+        @Nested
         class outOfStock {
             @Test
             void searchProducts_outOfStock() {
@@ -42,14 +78,15 @@ class ProductMapperTest {
                 jdbcTemplate.update(
                         "UPDATE product SET stock = ? WHERE product_id = ?",
                         0,
-                        "1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68"
-                        );
+                        "1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68");
 
                 List<ProductCardDto> products = productMapper.searchProducts(
-                        Collections.emptyList(),
-                        SortType.NEW,
-                        SIZE,
-                        PaginationUtil.calculateOffset(1, SIZE));
+                        new SearchCondition(
+                                null,
+                                Collections.emptyList(),
+                                SortType.NEW,
+                                SIZE,
+                                PaginationUtil.calculateOffset(1, SIZE)));
 
                 assertThat(products.size()).isEqualTo(2);
 
@@ -58,6 +95,7 @@ class ProductMapperTest {
                 assertThat(first.getProductName()).isEqualTo("Item19");
                 assertThat(first.getPrice()).isEqualTo(750);
                 assertThat(first.isOutOfStock()).isTrue();
+                assertThat(first.isFav()).isFalse();
 
                 assertThat(products.get(1).getProductId()).isEqualTo("f9c9cfb2-0893-4f1c-b508-f9e909ba5274");
             }
@@ -65,10 +103,12 @@ class ProductMapperTest {
             @Test
             void searchProducts_inStock() {
                 List<ProductCardDto> products = productMapper.searchProducts(
-                        Collections.emptyList(),
-                        SortType.NEW,
-                        SIZE,
-                        PaginationUtil.calculateOffset(1, SIZE));
+                        new SearchCondition(
+                                null,
+                                Collections.emptyList(),
+                                SortType.NEW,
+                                SIZE,
+                                PaginationUtil.calculateOffset(1, SIZE)));
 
                 assertThat(products.size()).isEqualTo(2);
 
@@ -87,23 +127,27 @@ class ProductMapperTest {
             @Test
             void searchProducts_noKeywords() {
                 List<ProductCardDto> products = productMapper.searchProducts(
-                        Collections.emptyList(),
-                        SortType.NEW,
-                        SIZE,
-                        PaginationUtil.calculateOffset(2, SIZE));
+                        new SearchCondition(
+                                null,
+                                Collections.emptyList(),
+                                SortType.NEW,
+                                SIZE,
+                                PaginationUtil.calculateOffset(2, SIZE)));
 
                 assertThat(products.size()).isEqualTo(2);
                 assertThat(products.get(0).getProductId()).isEqualTo("4a2a9e1e-4503-4cfa-ae03-3c1a5a4f2d07");
                 assertThat(products.get(1).getProductId()).isEqualTo("6e1a12d8-71ab-43e6-b2fc-6ab0e5e813fd");
             }
-            
+
             @Test
             void searchProducts_withKeywords() {
                 List<ProductCardDto> products = productMapper.searchProducts(
-                        List.of("m19", "Item5"),
-                        SortType.NEW,
-                        SIZE,
-                        PaginationUtil.calculateOffset(1, SIZE));
+                        new SearchCondition(
+                                null,
+                                List.of("m19", "Item5"),
+                                SortType.NEW,
+                                SIZE,
+                                PaginationUtil.calculateOffset(1, SIZE)));
 
                 assertThat(products.size()).isEqualTo(2);
                 assertThat(products.get(0).getProductId()).isEqualTo("1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68");
@@ -116,36 +160,42 @@ class ProductMapperTest {
             @Test
             void searchProducts_newSort() {
                 List<ProductCardDto> products = productMapper.searchProducts(
-                        Collections.emptyList(),
-                        SortType.NEW,
-                        SIZE,
-                        PaginationUtil.calculateOffset(1, SIZE));
+                        new SearchCondition(
+                                null,
+                                Collections.emptyList(),
+                                SortType.NEW,
+                                SIZE,
+                                PaginationUtil.calculateOffset(1, SIZE)));
 
                 assertThat(products.size()).isEqualTo(2);
                 assertThat(products.get(0).getProductId()).isEqualTo("1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68");
                 assertThat(products.get(1).getProductId()).isEqualTo("f9c9cfb2-0893-4f1c-b508-f9e909ba5274");
             }
-            
+
             @Test
             void searchProducts_highSort() {
                 List<ProductCardDto> products = productMapper.searchProducts(
-                        Collections.emptyList(),
-                        SortType.HIGH,
-                        SIZE,
-                        PaginationUtil.calculateOffset(1, SIZE));
+                        new SearchCondition(
+                                null,
+                                Collections.emptyList(),
+                                SortType.HIGH,
+                                SIZE,
+                                PaginationUtil.calculateOffset(1, SIZE)));
 
                 assertThat(products.size()).isEqualTo(2);
                 assertThat(products.get(0).getProductId()).isEqualTo("f9c9cfb2-0893-4f1c-b508-f9e909ba5274");
                 assertThat(products.get(1).getProductId()).isEqualTo("09d5a43a-d24c-41c7-af2b-9fb7b0c9e049");
             }
-            
+
             @Test
             void searchProducts_lowSort() {
                 List<ProductCardDto> products = productMapper.searchProducts(
-                        Collections.emptyList(),
-                        SortType.LOW,
-                        SIZE,
-                        PaginationUtil.calculateOffset(1, SIZE));
+                        new SearchCondition(
+                                null,
+                                Collections.emptyList(),
+                                SortType.LOW,
+                                SIZE,
+                                PaginationUtil.calculateOffset(1, SIZE)));
 
                 assertThat(products.size()).isEqualTo(2);
                 assertThat(products.get(0).getProductId()).isEqualTo("6e1a12d8-71ab-43e6-b2fc-6ab0e5e813fd");

@@ -1,33 +1,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.ProductMapper">
   <select id="searchProducts" resultType="com.example.dto.ProductCardDto">
-    SELECT product_id, product_name, price, stock,
-    CASE
-      WHEN stock &lt;= 0 THEN TRUE
-      ELSE FALSE
-    END AS out_of_stock
-    FROM product
-    WHERE sale_status = '1'
+    SELECT p.product_id, p.product_name, p.price,
+      (p.stock &lt;= 0) AS out_of_stock,
+      <choose>
+        <!-- ログイン中だけ JOIN があるので f.user_id をそのままブール式で判定 -->
+        <when test="userId != null">
+        f.user_id IS NOT NULL 
+        </when>
+        <!-- 未ログインは固定で FALSE -->
+         <otherwise>
+          FALSE
+         </otherwise>
+      </choose>
+       AS is_fav
+    FROM product p
+    <if test="userId != null">
+    LEFT JOIN favorite f
+      ON f.product_id = p.product_id
+      AND f.user_id = #{userId}
+    </if>
+    WHERE p.sale_status = '1'
     <if test="keywords.size() > 0">
       AND (
       <foreach collection="keywords" item="kw" separator="OR ">
-        product_name LIKE CONCAT('%', #{kw}, '%')
+        p.product_name LIKE CONCAT('%', #{kw}, '%')
       </foreach>
       )
     </if>
     ORDER BY
     <choose>
       <when test="sort.name() == 'NEW'">
-        created_at DESC 
+        p.created_at DESC 
       </when>
       <when test="sort.name() == 'HIGH'">
-        price DESC 
+        p.price DESC 
       </when>
       <when test="sort.name() == 'LOW'">
-        price ASC 
+        p.price ASC 
       </when>
     </choose>
-    , product_id DESC
+    , p.product_id DESC
     LIMIT #{offset}, #{size}
   </select>
   

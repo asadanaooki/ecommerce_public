@@ -2,8 +2,6 @@ package com.example.dto;
 
 import java.util.List;
 
-import com.example.enums.SortType;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,13 +13,7 @@ public class ProductListDto {
 
    private List<ProductCardDto> products;
     
-   private int currentPage;
-   
-   private int totalPages;
+   private int totalPage;
    
    private List<Integer> pageNumbers;
-   
-   private SortType sort;
-   
-   private List<String> keywords;
 }

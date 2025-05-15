@@ -8,7 +8,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
-      mode: never
+      mode: always
 
 mybatis:
   configuration:
@@ -21,4 +21,6 @@ settings:
   product:
     size: 2  # 商品一覧の表示件数
     page-nav-radius: 2 # 現在ページの前後に表示するページリンク数 (±)
+  tax:
+    rate-percent: 10
 

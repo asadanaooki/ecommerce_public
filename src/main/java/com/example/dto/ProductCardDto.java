@@ -11,4 +11,6 @@ public class ProductCardDto {
     private int price;
     
     private boolean outOfStock;
+    
+    private boolean isFav;
 }

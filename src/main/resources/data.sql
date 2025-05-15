@@ -77,3 +77,11 @@ INSERT INTO product (
     '2025-04-05 08:02:14',
     '2025-04-05 08:02:14'
 );
+
+insert into favorite (
+    user_id,
+    product_id
+) values(
+    '550e8400-e29b-41d4-a716-446655440000',
+    '1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68'
+);

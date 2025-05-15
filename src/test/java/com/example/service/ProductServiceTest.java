@@ -36,11 +36,8 @@ class ProductServiceTest {
         .extracting(ProductCardDto::getProductId)
         .containsExactly("1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68","f9c9cfb2-0893-4f1c-b508-f9e909ba5274");
         
-        assertThat(dto.getCurrentPage()).isEqualTo(1);
-        assertThat(dto.getTotalPages()).isEqualTo(3);
+        assertThat(dto.getTotalPage()).isEqualTo(3);
         assertThat(dto.getPageNumbers()).isEqualTo(List.of(1,2,3));
-        assertThat(dto.getSort()).isEqualTo(SortType.NEW);
-        assertThat(dto.getKeywords()).isEqualTo(List.of("tem"));
     }
 
 }
