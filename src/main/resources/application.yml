@@ -1,6 +1,7 @@
 spring:
   application:
     name: ecommerce
+    # TODO: 専用ユーザーにする
   datasource:
     url: jdbc:mysql://localhost:3306/ecommerce
     username: root
@@ -8,7 +9,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
-      mode: always
+      mode: never
+  autoconfigure:
+      exclude:
+        - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+        - org.springframework.boot.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
 
 mybatis:
   configuration:

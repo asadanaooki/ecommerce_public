@@ -2,6 +2,7 @@ package com.example.controller;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -9,11 +10,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -84,6 +88,24 @@ class ProductControllerTest {
                 Arguments.of(null, "NEW", null, new SearchParam(1, SortType.NEW, Collections.emptyList())),
                 Arguments.of(null, "NEW", "test 　りんご　バナna  ",
                         new SearchParam(1, SortType.NEW, List.of("test", "りんご", "バナna"))));
+    }
+
+    @Nested
+    @WithMockUser
+    class favorite{
+        @Test
+        void addFavorite() throws Exception {
+            mockMvc.perform(post("/product/{productId}/favorite/add", "97113c2c-719a-490c-9979-144d92905c31")
+                    .with(csrf()))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        void deleteFavorite() throws Exception {
+            mockMvc.perform(post("/product/{productId}/favorite/delete", "97113c2c-719a-490c-9979-144d92905c31")
+                    .with(csrf()))
+                    .andExpect(status().isOk());
+        }
     }
 
 }
