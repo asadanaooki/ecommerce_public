@@ -56,4 +56,40 @@
       )
     </if>
   </select>
+
+  <select id="findProductDetail" resultType="com.example.dto.ProductDetailDto">
+    select
+      p.product_id,
+      p.product_name,
+      p.product_description,
+      p.price,
+      (p.stock &lt;= 0) AS out_of_stock,
+      coalesce(rs.avg, 0) as rating_avg,
+      coalesce(rs.cnt, 0) as review_count,
+      <choose>
+        <when test="userId != null">
+        f.user_id IS NOT NULL 
+        </when>
+        <!-- 未ログインは固定で FALSE -->
+         <otherwise>
+          FALSE
+         </otherwise>
+      </choose>
+      as is_fav
+    from product p
+    left join (
+        select
+          r.product_id,
+          round(avg(r.rating), 1) as avg,
+          count(*) as cnt
+        from review r
+        group by r.product_id
+    ) rs on rs.product_id = p.product_id
+      <if test="userId != null">
+        left join favorite f
+          on f.product_id = p.product_id
+          and f.user_id = #{userId}
+      </if>
+    where p.product_id = #{productId};
+  </select>
 </mapper>

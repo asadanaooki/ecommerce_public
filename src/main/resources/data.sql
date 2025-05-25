@@ -85,3 +85,19 @@ insert into favorite (
     '550e8400-e29b-41d4-a716-446655440000',
     '1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68'
 );
+
+INSERT INTO review (
+    user_id,
+    product_id,
+    rating,
+    comment,
+    created_at,
+    updated_at
+) VALUES (
+    '550e8400-e29b-41d4-a716-446655440000',     -- レビュアー
+    '1e7b4cd6-79cf-4c6f-8a8f-be1f4eda7d68',     -- Item19
+    5,                                          -- ★5
+    'コスパ抜群で毎回リピートしています！',       -- 500 文字以内
+    '2025-05-25 12:10:30',                      -- 作成日時
+    '2025-05-25 12:10:30'                       -- 更新日時
+);

@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
-      mode: never
+      mode: always
   autoconfigure:
       exclude:
         - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
