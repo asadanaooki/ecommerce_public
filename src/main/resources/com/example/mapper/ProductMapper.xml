@@ -1,0 +1,114 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ProductMapper">
+  <select id="selectById" resultType="com.example.entity.Product">
+    SELECT *
+    FROM product
+    WHERE product_id = #{productId}
+  </select>
+  
+  <select id="selectAllByIds" resultType="com.example.entity.Product">
+    SELECT *
+    FROM product
+    WHERE product_id IN
+    <foreach collection="productIds"
+      item="id"
+      open="("
+      separator=","
+      close=")">
+      #{id}
+    </foreach>
+  </select>
+
+  <select id="searchProducts" resultType="com.example.dto.ProductCardDto">
+    SELECT p.product_id, p.product_name, p.price,
+      (p.stock &lt;= 0) AS out_of_stock,
+      <choose>
+        <!-- ログイン中だけ JOIN があるので f.user_id をそのままブール式で判定 -->
+        <when test="userId != null">
+        f.user_id IS NOT NULL 
+        </when>
+        <!-- 未ログインは固定で FALSE -->
+         <otherwise>
+          FALSE
+         </otherwise>
+      </choose>
+       AS is_fav
+    FROM product p
+    <if test="userId != null">
+    LEFT JOIN favorite f
+      ON f.product_id = p.product_id
+      AND f.user_id = #{userId}
+    </if>
+    WHERE p.sale_status = '1'
+    <if test="keywords.size() > 0">
+      AND (
+      <foreach collection="keywords" item="kw" separator="OR ">
+        p.product_name LIKE CONCAT('%', #{kw}, '%')
+      </foreach>
+      )
+    </if>
+    ORDER BY
+    <choose>
+      <when test="sort.name() == 'NEW'">
+        p.created_at DESC 
+      </when>
+      <when test="sort.name() == 'HIGH'">
+        p.price DESC 
+      </when>
+      <when test="sort.name() == 'LOW'">
+        p.price ASC 
+      </when>
+    </choose>
+    , p.product_id DESC
+    LIMIT #{offset}, #{size}
+  </select>
+  
+  <select id="countProducts" resultType="int">
+    SELECT COUNT(*)
+    FROM product
+    WHERE sale_status = '1'
+    <if test="keywords.size() > 0">
+      AND (
+      <foreach collection="keywords" item="kw" separator="OR ">
+        product_name LIKE CONCAT('%', #{kw}, '%')
+      </foreach>
+      )
+    </if>
+  </select>
+
+  <select id="findProductDetail" resultType="com.example.dto.ProductDetailDto">
+    select
+      p.product_id,
+      p.product_name,
+      p.product_description,
+      p.price,
+      (p.stock &lt;= 0) AS out_of_stock,
+      coalesce(rs.avg, 0) as rating_avg,
+      coalesce(rs.cnt, 0) as review_count,
+      <choose>
+        <when test="userId != null">
+        f.user_id IS NOT NULL 
+        </when>
+        <!-- 未ログインは固定で FALSE -->
+         <otherwise>
+          FALSE
+         </otherwise>
+      </choose>
+      as is_fav
+    from product p
+    left join (
+        select
+          r.product_id,
+          round(avg(r.rating), 1) as avg,
+          count(*) as cnt
+        from review r
+        group by r.product_id
+    ) rs on rs.product_id = p.product_id
+      <if test="userId != null">
+        left join favorite f
+          on f.product_id = p.product_id
+          and f.user_id = #{userId}
+      </if>
+    where p.product_id = #{productId};
+  </select>
+</mapper>

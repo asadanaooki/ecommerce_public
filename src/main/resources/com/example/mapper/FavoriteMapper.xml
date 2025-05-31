@@ -1,0 +1,14 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.FavoriteMapper">
+  <insert id="addFavorite">
+    insert into favorite (user_id, product_id)
+    values( #{userId}, #{productId})
+  </insert>
+  
+  <delete id="deleteFavorite">
+    delete from favorite
+    where product_id = #{productId}
+      and user_id = #{userId}
+  </delete>
+  
+</mapper>

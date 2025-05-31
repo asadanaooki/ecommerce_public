@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--TODO:
+・aria-label="検索"でどう変わるか？
+・ViewPort 100vhでどう変わるか？
+・sortにアイコンいれる
+・sortのフォーカス色消す
+・カードの高さ固定にする
+-->
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{base}">
+<head>
+  <title layout:fragment="title">Mini EC | 商品一覧</title>
+  <script th:src="@{/scripts/product-utils.js}" defer></script>
+  <script th:src="@{/scripts/product-list.js}" defer></script>
+</head>
+<body>
+
+<main layout:fragment="content" class="container py-4">
+  <!-- 並び替え --> 
+  <select id="sortSel" name="sort" class="form-select w-auto">
+    <option value="new" th:selected="${sort=='new'}">新着順</option>
+    <option value="high" th:selected="${sort=='high'}">価格が高い順</option>
+    <option value="low" th:selected="${sort=='low'}">価格が低い順</option>
+  </select>
+  
+  <!-- 商品リスト -->
+  <section id="productList" class="row row-cols-4 g-4">
+    <div class="col" th:each="p : ${dto.products}">
+      <article class="card">
+        <a th:href="@{/product/{id}(id=${p.productId})}">
+          <img th:src="@{/images/{id}.jpeg(id=${p.productId})}" th:alt="${p.productName}">
+        </a>
+        <div class="card-body">
+          <p th:text="${p.productName}">商品名</p>
+          <div class="d-flex justify-content-between align-items-end">
+            <span class="fw-bold">
+              <span th:text="${#numbers.formatInteger(p.price,1,'COMMA')}">0</span><span>円</span>
+            </span>
+            <button class="fav-btn" type="button"><i class="bi bi-heart"></i></button>
+          </div>
+        </div>
+        
+        <!-- 在庫なし表示  -->
+        <p class="text-danger" th:if="${p.outOfStock}">在庫なし</p>
+      </article>
+    </div>
+  </section>
+  
+   <!-- ページング -->
+  <ul class="pagination mb-0 justify-content-center">
+    <li class="page-item" th:if="${currentPage > 1}">
+      <a class="page-link" th:href="@{/product(page=${currentPage - 1},sort=${sort},q=${keywords})}">
+        &#x2039;
+      </a>
+    </li>
+  
+    <li th:each="n : ${dto.pageNumbers}" th:class="${n==currentPage} ? 'page-item active' : 'page-item'">
+      <a th:text="${n}"
+        th:href="@{/product(page=${n},sort=${sort},q=${keywords})}"></a>
+    </li>
+    
+    <li class="page-item" th:if="${currentPage < dto.totalPage}">
+      <a th:href="@{/product(page=${currentPage + 1},sort=${sort},q=${keywords})}">
+        &#x203A;
+      </a>
+    </li>
+  </ul>
+  
+  <!--  ローディング-->
+  <div id="spinner" hidden>Loading</div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+@charset "UTF-8";
+:root{
+  --beige:#C9B79A;
+  --beige-light:#F4EEDE;
+  --accent:#7B0018;
+  --stock-bar:#F1F1F1;
+}
+
+.search-bar{
+  border: 1px solid #ccc;
+  border-radius: .5rem;
+  overflow: hidden;
+}
+
+.search-bar .form-control{
+  border: none;
+  box-shadow: none;
+}
+
+.search-bar .form-control:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-beige{
+  background: var(--beige);
+  border: 1px solid var(--beige);
+  color: #fff;
+}
+
+.btn-beige:hover,
+.btn-beige:focus {
+  background:#B1A085;    /* ホバー時に濃いベージュへ */
+  border-color:#B1A085;
+  color:#fff;
+  box-shadow:none;
+}
+
+/* ヘッダーアイコン */
+.icon-btn{
+  color: #444;
+  text-decoration: none;
+ position: relative;
+}
+#cartCount{
+  font-size: .75rem;
+  padding: .2em .48em;
+  border-radius: 9999px;
+}
+
+.bg-accent {background: var(--accent) !important;}
+
+/* お気に入り */
+.fav-btn{
+  
+}

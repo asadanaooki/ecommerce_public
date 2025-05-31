@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: ecommerce
+    # TODO: 専用ユーザーにする
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce
+    username: root
+    password: softeni0926
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+  autoconfigure:
+      exclude:
+        - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+        - org.springframework.boot.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   # ← 追加
+#    
+#logging:
+#  level:
+#    org.mybatis: DEBUG    # ← 追加（実行 SQL を標準出力に）
+#    default-enum-type-handler: com.example.domain.model.enums.GenericEnumTypeHandler
+
+
+#設定値
+settings:
+  product:
+    size: 2  # 商品一覧の表示件数
+    page-nav-radius: 2 # 現在ページの前後に表示するページリンク数 (±)
+  tax:
+    rate-percent: 10
+

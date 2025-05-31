@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--TODO:
+・平均値X.0→Xで表示
+-->
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{base}">
+  <head>
+    <title layout:fragment="title" th:text="'Mini EC | ' + ${dto.productName}"></title>
+    <script th:src="@{/scripts/product-utils.js}" defer></script>
+    <script th:src="@{/scripts/product-detail.js}" defer></script>
+  </head>
+  <body>
+    <main layout:fragment="content" class="container py-5">
+      <div class="row">
+        <img class="col-6" th:src="@{/images/{id}.jpeg(id=${dto.productId})}" th:alt="${dto.productName}">
+        
+        <div class="col-6">
+          <h3 class="fw-bold mb-3" th:text="${dto.productName}"></h3>
+          <div class="d-flex align-items-center mb-2" >
+            <span th:text="${dto.ratingAvg}"></span>
+            <small class="me-2">/ 5</small>  
+            (<a th:href="'#'" th:text="${dto.reviewCount}"></a>件)
+            <button class="ms-auto fav-btn" type="button" th:attr="data-product-id=${dto.productId}">
+              <i class="bi" th:classappend="${dto.isFav} ? 'bi-heart-fill' : 'bi-heart'"></i>
+            </button>
+          </div>
+          <p class="fs-5 fw-bold mb-4">
+            <span th:text="${#numbers.formatInteger(dto.price, 1, 'COMMA')}"></span> 円
+          </p>
+          
+          <!-- 数量セレクタ-->
+          <fieldset th:disabled="${dto.outOfStock}" class="d-flex gap-2 mb-3">
+            <button id="qtyMinus" class="btn btn-secondary fs-5" type="button">ー</button>
+            <input id="qtyInput" class="form-control text-center" value="1" readonly
+              style="width: 50px;">
+            <button id="qtyPlus" class="btn btn-secondary fs-5" type="button">＋</button>
+          </fieldset >
+          
+          <p id="qtyLimitMsg" class="text-danger d-none">
+            購入可能な個数は20までです
+          </p>
+          
+          <button id="addToCartBtn" type="button" class="btn btn-dark"
+            th:data-product-id="${dto.productId}"
+            th:unless="${dto.outOfStock}">
+            <i class="bi bi-cart"></i>
+            <span>カートに入れる</span>
+          </button>
+          <p class="text-danger fw-bold" th:if="${dto.outOfStock}">在庫なし</p>
+          <p th:text="${dto.productDescription}"></p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
