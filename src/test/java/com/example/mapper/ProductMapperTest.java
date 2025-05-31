@@ -267,6 +267,8 @@ class ProductMapperTest {
         
         @Test
         void findProductDetail_guest() {
+            factory.updateProductStock("f9c9cfb2-0893-4f1c-b508-f9e909ba5274", 0);
+            
             ProductDetailDto dto = productMapper.findProductDetail("f9c9cfb2-0893-4f1c-b508-f9e909ba5274",
                     null);
             
@@ -277,7 +279,7 @@ class ProductMapperTest {
             assertThat(dto.getRatingAvg()).isEqualTo(BigDecimal.valueOf(0.0));
             assertThat(dto.getReviewCount()).isEqualTo(0);
             assertThat(dto.isFav()).isFalse();
-            assertThat(dto.isOutOfStock()).isFalse();
+            assertThat(dto.isOutOfStock()).isTrue();
         }
     }
 }

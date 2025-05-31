@@ -6,12 +6,17 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.example.dto.ProductCardDto;
 import com.example.dto.ProductDetailDto;
+import com.example.entity.Product;
 import com.example.enums.SortType;
 
 @Mapper
 public interface ProductMapper {
 // TODO:
     // searchProductsで外部結合とサブクエリの速度比較
+    
+    Product selectById(String productId);
+    
+    List<Product> selectAllByIds(List<String> productIds);
     
     List<ProductCardDto> searchProducts(SearchCondition sc);
 

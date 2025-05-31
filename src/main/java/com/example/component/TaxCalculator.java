@@ -12,9 +12,13 @@ import org.springframework.stereotype.Component;
 public class TaxCalculator {
 
     @Value("${settings.tax.rate-percent}")
-    private int ratePercent;
+    private final int ratePercent;
     
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+    
+    public TaxCalculator( @Value("${settings.tax.rate-percent}") int ratePercent) {
+        this.ratePercent = ratePercent;
+    }
     
     public int calculatePriceIncludingTax(int exclTaxPrice) {
         BigDecimal excl = BigDecimal.valueOf(exclTaxPrice);

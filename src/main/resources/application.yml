@@ -18,6 +18,11 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   # ← 追加
+#    
+#logging:
+#  level:
+#    org.mybatis: DEBUG    # ← 追加（実行 SQL を標準出力に）
 #    default-enum-type-handler: com.example.domain.model.enums.GenericEnumTypeHandler
 
 

@@ -2,9 +2,11 @@ package com.example.dto;
 
 import java.math.BigDecimal;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class ProductDetailDto {
     private String productId;
     

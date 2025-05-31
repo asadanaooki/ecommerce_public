@@ -1,5 +1,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.ProductMapper">
+  <select id="selectById" resultType="com.example.entity.Product">
+    SELECT *
+    FROM product
+    WHERE product_id = #{productId}
+  </select>
+  
+  <select id="selectAllByIds" resultType="com.example.entity.Product">
+    SELECT *
+    FROM product
+    WHERE product_id IN
+    <foreach collection="productIds"
+      item="id"
+      open="("
+      separator=","
+      close=")">
+      #{id}
+    </foreach>
+  </select>
+
   <select id="searchProducts" resultType="com.example.dto.ProductCardDto">
     SELECT p.product_id, p.product_name, p.price,
       (p.stock &lt;= 0) AS out_of_stock,
